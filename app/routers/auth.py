@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core import security, database
 from app.schemas import user
 from app.models import user as user_model
+from datetime import datetime, timezone
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 @router.post("/register")
@@ -32,3 +33,14 @@ async def login(data: user.UserRegister, db: AsyncSession = Depends(database.get
     access_token = security.create_access_token({"user_id": existing_user.id})
 
     return {"access_token": access_token, "token_type": "bearer"}
+
+@router.post("/logout")
+async def logout(token: str):
+    payload = security.decode_access_token(token)
+    exp_timestamp = payload["exp"]
+    now_timestamp = datetime.now(timezone.utc).timestamp()
+    ttl_seconds = int(exp_timestamp - now_timestamp)
+
+    await database.redis_client.set(f"blacklist:{token}", "true", ex=ttl_seconds)
+
+    return {"status": "logged out"}
