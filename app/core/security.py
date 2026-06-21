@@ -2,6 +2,8 @@ from argon2 import PasswordHasher
 from datetime import datetime,timedelta,timezone
 from jose import jwt
 from app.core.config import settings
+from argon2.exceptions import VerifyMismatchError
+
 
 ph = PasswordHasher()
 
@@ -9,8 +11,11 @@ def hash_password(password: str) -> str:
     return ph.hash(password)
 
 def verify_password(hashed_password: str, password: str) -> bool:
-    return ph.verify(hashed_password, password)
-
+    try:
+        return ph.verify(hashed_password, password)
+    except VerifyMismatchError:
+        return False
+    
 def create_access_token(data:dict)->str:
     to_encode=data.copy()
     expire=datetime.now(timezone.utc)+timedelta(minutes=15)
