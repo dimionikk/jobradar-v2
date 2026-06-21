@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey,func
 from app.core.database import Base
 from datetime import datetime
 
@@ -10,4 +10,4 @@ class Application(Base):
     vacancy_id: Mapped[int] = mapped_column(ForeignKey("vacancies.id"))
     status: Mapped[str]
     note: Mapped[str]
-    applied_at: Mapped[datetime]
+    applied_at: Mapped[datetime]= mapped_column(server_default=func.now())
