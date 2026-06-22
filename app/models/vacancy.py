@@ -8,7 +8,7 @@ class Vacancy(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
-    company: Mapped[str]
+    company: Mapped[str | None] = mapped_column(nullable=True)
     description: Mapped[str]
     salary: Mapped[float | None] = mapped_column(nullable=True)
     city: Mapped[str | None] = mapped_column(nullable=True)
