@@ -14,5 +14,6 @@ class Vacancy(Base):
     experience_years:Mapped[int]
     url:Mapped[str]=mapped_column(unique=True)
     source:Mapped[str]
+    is_active: Mapped[bool] = mapped_column(default=True)
     created_at:Mapped[datetime]
     parsed_at:Mapped[datetime]
