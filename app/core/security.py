@@ -4,7 +4,6 @@ from jose import jwt
 from app.core.config import settings
 from argon2.exceptions import VerifyMismatchError
 
-
 ph = PasswordHasher()
 
 def hash_password(password: str) -> str:
@@ -24,3 +23,4 @@ def create_access_token(data:dict)->str:
 
 def decode_access_token(token:str)->dict:
     return jwt.decode(token,settings.JWT_SECRET_KEY,algorithms=["HS256"])
+

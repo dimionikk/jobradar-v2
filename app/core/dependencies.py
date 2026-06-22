@@ -4,6 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.core import security, database
 from app.models import user as user_model
+from jose.exceptions import JWTError
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
@@ -15,7 +16,11 @@ async def get_current_user(
     if is_blacklisted:
         raise HTTPException(status_code=401, detail="Токен відкликаний")
 
-    payload = security.decode_access_token(token)
+    try:
+        payload = security.decode_access_token(token)
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Невалідний токен")
+    
     user_id = payload.get("user_id")
 
     result = await db.execute(select(user_model.User).where(user_model.User.id == user_id))
