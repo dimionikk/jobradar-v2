@@ -27,6 +27,7 @@ async def save_vacancies(db: AsyncSession, parsed_vacancies: list[dict], source:
                 url=item["url"],
                 source=source,
                 is_active=True,
+                published_at=item.get("published_at"),
                 created_at=datetime.now(),
                 parsed_at=datetime.now(),
             )
