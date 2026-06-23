@@ -13,3 +13,4 @@ class User(Base):
     city:Mapped[str | None] = mapped_column(nullable=True)
     work_type:Mapped[str | None] = mapped_column(nullable=True)
     bio:Mapped[str | None] = mapped_column(nullable=True)
+    resume_text:Mapped[str | None] = mapped_column(nullable=True)
